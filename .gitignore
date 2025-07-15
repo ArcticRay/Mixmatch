@@ -19,6 +19,38 @@
 *.tar.gz
 *.rar
 
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+.gradle-cache/
+**/out/
+
+# IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment & credentials
+.env
+*.env
+*.key
+*.pem
+*.crt
+
+# Temporary files
+*.tmp
+*.swp
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
