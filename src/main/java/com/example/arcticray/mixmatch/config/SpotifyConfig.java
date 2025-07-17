@@ -15,9 +15,16 @@ public class SpotifyConfig {
     private String apiBaseUrl;
 
     @Bean
-    public WebClient spotifyWebClient(WebClient.Builder builder) {
+    public WebClient spotifyApiClient(WebClient.Builder builder) {
         return builder
                 .baseUrl(apiBaseUrl)
+                .build();
+    }
+
+    @Bean
+    public WebClient spotifyTokenClient(WebClient.Builder builder) {
+        return builder
+                .baseUrl(tokenUrl)
                 .build();
     }
 
