@@ -3,6 +3,7 @@ package com.example.arcticray.mixmatch.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -12,38 +13,39 @@ import java.util.Base64;
 @Service
 public class SpotifyService {
 
-    private final WebClient apiClient;
+    private final WebClient apiClient;    // für /v1 Aufrufe
+    private final WebClient tokenClient;  // für Token-Requests
     private final String clientId;
     private final String clientSecret;
-    private final String tokenUrl;
 
-    public SpotifyService(WebClient spotifyWebClient,
-                          com.example.arcticray.mixmatch.config.SpotifyConfig cfg) {
-        this.apiClient     = spotifyWebClient;
-        this.clientId      = cfg.getClientId();
-        this.clientSecret  = cfg.getClientSecret();
-        this.tokenUrl      = cfg.getTokenUrl();
+    public SpotifyService(
+            WebClient spotifyApiClient,
+            WebClient spotifyTokenClient,
+            com.example.arcticray.mixmatch.config.SpotifyConfig cfg
+    ) {
+        this.apiClient    = spotifyApiClient;
+        this.tokenClient  = spotifyTokenClient;
+        this.clientId     = cfg.getClientId();
+        this.clientSecret = cfg.getClientSecret();
     }
 
     private String getAccessToken() {
-        String payload = clientId + ":" + clientSecret;
-        String basicAuth = Base64.getEncoder()
-                .encodeToString(payload.getBytes(StandardCharsets.UTF_8));
+        String basic = Base64.getEncoder()
+                .encodeToString((clientId + ":" + clientSecret)
+                        .getBytes(StandardCharsets.UTF_8));
 
-        JsonNode tokenResponse = WebClient.create()
-                .post()
-                .uri(tokenUrl)                      //  https://accounts.spotify.com/api/token
-                .header("Authorization", "Basic " + basicAuth)
+        JsonNode resp = tokenClient.post()
+                .header("Authorization", "Basic " + basic)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .bodyValue("grant_type=client_credentials")
+                .body(BodyInserters.fromFormData("grant_type", "client_credentials"))
                 .retrieve()
                 .bodyToMono(JsonNode.class)
                 .block();
 
-        if (tokenResponse == null || tokenResponse.get("access_token") == null) {
+        if (resp == null || resp.get("access_token") == null) {
             throw new IllegalStateException("Kein Access Token erhalten");
         }
-        return tokenResponse.get("access_token").asText();
+        return resp.get("access_token").asText();
     }
 
     public JsonNode searchTracks(String query) {

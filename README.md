@@ -19,10 +19,29 @@
 - Maven or Gradle (your choice)
 - Docker + GitHub Actions (CI/CD)
 
-## Getting Started
+## 🚀 Getting Started
 
-Clone the repo and run locally:
+### 🔧 Prerequisites
+- **Java 23+** installed
+- **Git** installed
 
+### 1. Clone the Repo
+
+### 2. Set up Spotify Credentials
+- Keep your secrets out of code!
 ```bash
-./mvnw clean install
-./mvnw spring-boot:run
+export SPOTIFY_CLIENT_ID=your_client_id
+export SPOTIFY_CLIENT_SECRET=your_client_secret
+```
+### 3. Build and run
+```bash
+# Build the project and run tests
+./gradlew clean build
+
+# Launch the application
+./gradlew bootRun
+```
+### 4. Verify example Endpoint
+```
+curl "http://localhost:8080/api/spotify/test?name=Beatles"
+```
