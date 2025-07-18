@@ -74,7 +74,7 @@ public class SpotifyController {
     public ResponseEntity<String> verifyConnection(@RequestParam("name") String name) {
         try {
             JsonNode tracks = service.getArtistTopTracks(name).path("tracks");
-            if (!tracks.isArray() || tracks.size() == 0) {
+            if (!tracks.isArray() || tracks.isEmpty()) {
                 return ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
                         .body("No tracks found for artist: " + name);
