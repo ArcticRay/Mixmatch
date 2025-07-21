@@ -12,11 +12,11 @@
 
 ## Tech Stack
 
-- Java 17+
-- Spring Boot 3
+- Java 23
+- Spring Boot 
 - Spotify Web API
 - OAuth2 Authorization Code Flow
-- Maven or Gradle (your choice)
+- Gradle
 - Docker + GitHub Actions (CI/CD)
 
 ## 🚀 Getting Started
